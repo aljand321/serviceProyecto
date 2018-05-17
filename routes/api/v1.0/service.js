@@ -3,12 +3,11 @@ var router = express.Router();
 var _ = require("underscore");
 
 var User = require("../../../database/collections/user");
+var Inmuebles = require("../../../database/collections/inmuebles");
 
 //añadiendo a usario
 
 router.post("/user", (req, res) => {
-
- //validando usarios
 
   var user = {
     nombre : req.body.nombre,
@@ -119,5 +118,37 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
   });
 });
 
+//para el servicio de las casas
+
+//añadiendo inmuebles
+
+router.post("/inmuebles", (req, res) => {
+
+  var inmuebles = {
+    tipo : req.body.tipo,
+    estado : req.body.estado,
+    ciudad : req.body.ciudad,
+    zona : req.body.zona,
+    direccion : req.body.direccion,
+    precio : req.body.precio,
+    descripcion : req.body.descripcion,
+  };
+  var casaData = new Inmuebles(inmuebles);
+
+  casaData.save().then( () => {
+      res.status(200).json({
+        "msn" : "Registrado con exito"
+      });
+  });
+
+});
+
+//mostrar inmuebles
+
+router.get("/inmuebles", (req, res, next) =>{
+  Inmuebles.find({}).exec( (error, docs) => {
+      res.status(200).json(docs);
+  })
+});
 
 module.exports = router;

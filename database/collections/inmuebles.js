@@ -9,5 +9,5 @@ var casaSchema = {
   descripcion : String
 
 };
-var casa = mongoose.model("casa", casaSchema);
-module.exports = casa;
+var inmuebles = mongoose.model("inmuebles", casaSchema);
+module.exports = inmuebles;
