@@ -13,9 +13,9 @@ router.post("/user", (req, res) => {
   var user = {
     nombre : req.body.nombre,
     apellido : req.body.apellido,
-    edad : req.body.edad,
     email : req.body.email,
-    numeroTelefono : req.body.numeroTelefono
+    numeroTelefono : req.body.numeroTelefono,
+    password : req.body.password
   };
   var userData = new User(user);
 
@@ -68,8 +68,8 @@ router.put(/user\/[a-z0-9]{1,}$/, (req, res) => {
   var url = req.url;
   var id = url.split("/")[2];
   var keys  = Object.keys(req.body);
-  var oficialkeys = ['nombre', 'apellido', 'sexo','edad',
-                     'email','numeroTelefono'];
+  var oficialkeys = ['nombre', 'apellido','email','numeroTelefono',
+                    'password'];
   var result = _.difference(oficialkeys, keys);
   if (result.length > 0) {
     res.status(400).json({
@@ -81,9 +81,10 @@ router.put(/user\/[a-z0-9]{1,}$/, (req, res) => {
   var user = {
     nombre : req.body.nombre,
     apellido : req.body.apellido,
-    edad : req.body.edad,
     email : req.body.email,
-    numeroTelefono : req.body.numeroTelefono
+    numeroTelefono : req.body.numeroTelefono,
+    password : req.body.password
+
   };
   User.findOneAndUpdate({_id: id}, user, (err, params) => {
       if(err) {
