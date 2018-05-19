@@ -131,7 +131,7 @@ router.post("/inmuebles", (req, res) => {
     zona : req.body.zona,
     direccion : req.body.direccion,
     precio : req.body.precio,
-    descripcion : req.body.descripcion,
+    descripcion : req.body.descripcion
   };
   var casaData = new Inmuebles(inmuebles);
 
