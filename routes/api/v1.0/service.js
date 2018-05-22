@@ -132,15 +132,22 @@ router.post("/inmuebles", (req, res) => {
     direccion : req.body.direccion,
     precio : req.body.precio,
     descripcion : req.body.descripcion,
+    correo : req.body.correo
   };
-  var casaData = new Inmuebles(inmuebles);
-
-  casaData.save().then( () => {
-      res.status(200).json({
-        "msn" : "Registrado con exito"
+    //User.findOne({})
+  User.findOne({email : req.body.correo}).exec((error, docs) => {
+    if(docs != null){
+      var casaData = new Inmuebles(inmuebles);
+      casaData.save().then( () => {
+          res.status(200).json({
+            "msn" : "Registrado con exito"
+          })
       });
-  });
-
+    }
+    res.status(200).json({
+      "msn" : "El usuario no esta Registrado"
+    })
+  })
 });
 
 //mostrar inmuebles
