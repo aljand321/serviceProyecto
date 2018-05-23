@@ -159,19 +159,38 @@ router.post("/inmuebles", (req, res) => {
     cantidadCuartos : req.body.cantidadCuartos,
     cantidadBaños : req.body.cantidadBaños,
     garage : req.body.garage,
-    superficie : req.body.superficie
+    superficie : req.body.superficie,
+    correo : req.body.correo
   };
-  var casaData = new Inmuebles(inmuebles);
-
-  casaData.save().then( () => {
-      res.status(200).json({
-        "msn" : "Registrado con exito"
-      });
-  }).catch(err => {
-        res.status(500).json({
-          error : error
-        });
-  });
+  User.findOne({email : req.body.correo}).exec((error, docs) => {
+    //User.findOne({})
+  if(error){
+    res.status(200).json({
+      "msn" : error
+    })
+    return
+  }
+  if(docs != null){
+    var id= docs._id;
+    inmuebles.user = id;
+    //console.log(inmuebles);
+    var casaData = new Inmuebles(inmuebles);
+    casaData.save().then( () => {
+        res.status(200).json({
+          "msn" : "Registrado con exito"
+        })
+    }).catch((err) => {
+      res.status(400).json({
+        "msn" : err
+      })
+    });
+  }
+  else{
+    res.status(200).json({
+      "msn" : "El usuario no esta Registrado"
+    })
+  }
+  })
 
 });
 

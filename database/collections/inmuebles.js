@@ -13,7 +13,7 @@ var casaSchema = {
   cantidadBaños : String,
   garage : String,
   superficie : String,
-
+  correo : String,
   user: {type: Schema.ObjectId, ref: "user"}
 };
 var inmuebles = mongoose.model("inmuebles", casaSchema);
