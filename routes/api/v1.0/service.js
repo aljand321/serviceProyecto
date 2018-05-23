@@ -163,7 +163,9 @@ router.post("/inmuebles", (req, res) => {
     correo : req.body.correo
   };
   User.findOne({email : req.body.correo}).exec((error, docs) => {
-    //User.findOne({})
+    //User.findOne({
+    
+  })
   if(error){
     res.status(200).json({
       "msn" : error
