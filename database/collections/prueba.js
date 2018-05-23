@@ -4,9 +4,7 @@ var userSchema = {
   Year : String,
   imdbID : String,
   Type : Number,
-  Poster : String,
-  direccionActual : String,
-  password : String
+  Poster : String
 };
 var user = mongoose.model("user", userSchema);
 module.exports = user;
