@@ -134,19 +134,34 @@ router.post("/inmuebles", (req, res) => {
     descripcion : req.body.descripcion,
     correo : req.body.correo
   };
-    //User.findOne({})
   User.findOne({email : req.body.correo}).exec((error, docs) => {
+    //User.findOne({})
+    if(error){
+      res.status(200).json({
+        "msn" : error
+      })
+      return
+    }
     if(docs != null){
+      var id= docs._id;
+      inmuebles.id_user = id;
+      //console.log(inmuebles);
       var casaData = new Inmuebles(inmuebles);
       casaData.save().then( () => {
           res.status(200).json({
             "msn" : "Registrado con exito"
           })
+      }).catch((err) => {
+        res.status(400).json({
+          "msn" : err
+        })
       });
     }
-    res.status(200).json({
-      "msn" : "El usuario no esta Registrado"
-    })
+    else{
+      res.status(200).json({
+        "msn" : "El usuario no esta Registrado"
+      })
+    }
   })
 });
 
@@ -157,5 +172,19 @@ router.get("/inmuebles", (req, res, next) =>{
       res.status(200).json(docs);
   })
 });
+
+router.get("/id_inm", (req, res, next) =>{
+  Inmuebles.find({},"id_user").exec( (error, docs) => {
+      res.status(200).json(docs);
+  })
+});
+
+router.get("/id_user", (req, res, next) =>{
+  User.find({},"_id").exec( (error, docs) => {
+      res.status(200).json(docs);
+  })
+});
+
+
 
 module.exports = router;
