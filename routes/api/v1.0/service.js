@@ -5,7 +5,7 @@ var _ = require("underscore");
 
 var User = require("../../../database/collections/user");
 var Inmuebles = require("../../../database/collections/inmuebles");
-var Prueba = require("../../../database/collections/prueba");
+//var Prueba = require("../../../database/collections/prueba");
 
 //Prueba
 
@@ -29,7 +29,7 @@ var Prueba = require("../../../database/collections/prueba");
 });*/
 
 //ruta para listar los libros mas la informacion completaa del autor
-router.get("/prueba", (req, res, next) => {
+/*router.get("/prueba", (req, res, next) => {
   //aqui utilizamos populate() para poblar el parametro "autor" con toda la info acerca del mismo
   Prueba.find({}).populate("user").exec( (error, docs) => {
     //checkeamos hay error de algun tipo
@@ -62,7 +62,7 @@ router.get("/prueba", (req, res, next) => {
       });
     }
   })
-});
+});*/
 
 //mostrar usuarios
 
@@ -317,6 +317,14 @@ router.delete(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
      res.status(200).json(docs);
  });
 });
+<<<<<<< HEAD
+//id:_delusuario
+router.post("/id_user", (req, res) => {
+  User.findOne({nombre : req.body.user },"_id").exec( (error, docs) => {
+    res.status(200).json(docs);
+  })
+});
+=======
 
 router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
   var url = req.url;
@@ -338,6 +346,4 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
       return;
   });
 });
-
-
 module.exports = router;
