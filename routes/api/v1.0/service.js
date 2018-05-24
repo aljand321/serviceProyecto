@@ -131,16 +131,22 @@ router.post("/inmuebles", (req, res) => {
     zona : req.body.zona,
     direccion : req.body.direccion,
     precio : req.body.precio,
-    descripcion : req.body.descripcion
+    descripcion : req.body.descripcion,
+    correo : req.body.correo
   };
-  var casaData = new Inmuebles(inmuebles);
-
-  casaData.save().then( () => {
-      res.status(200).json({
-        "msn" : "Registrado con exito"
+    User.findOne({email : req.body.correo}).exec(error, docs) => {
+      if(docs != null){
+        var casaData = new Inmuebles(inmuebles);
+          casaData.save().then( () => {
+            res.status(200).json({
+              "msn" : "Registrado con exito"
+          });
       });
-  });
-
+    }
+  }
+  res.status(200).json({
+        "msn" : "No existe el usario "
+      });
 });
 
 //mostrar inmuebles
@@ -150,5 +156,10 @@ router.get("/inmuebles", (req, res, next) =>{
       res.status(200).json(docs);
   })
 });
-
+//id:_delusuario
+router.post("/id_user", (req, res) => {
+  User.findOne({nombre : req.body.user },"_id").exec( (error, docs) => {
+    res.status(200).json(docs);
+  })
+});
 module.exports = router;
