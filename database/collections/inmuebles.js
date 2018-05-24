@@ -1,16 +1,19 @@
 const mongoose = require("../connect");
-const Shema = require("mongoose").Schema;
-var usuario = mongoose.model('user');
+const Schema = require("mongoose").Schema;
 var casaSchema = {
   tipo : String,
   estado : String,
-  ciudad : String,
-  zona : String,
-  direccion : String,
   precio : String,
+  ciudad : String,
+  region : String,
+  ubicacion : String,
   descripcion : String,
-  id_user : { type : Shema.ObjectId, ref: "usuario"},
-  correo : String
+  cantidadCuartos : String,
+  cantidadBaños : String,
+  garage : String,
+  superficie : String,
+  correo : String,
+  user: {type: Schema.ObjectId, ref: "user"}
 };
 var inmuebles = mongoose.model("inmuebles", casaSchema);
 module.exports = inmuebles;
