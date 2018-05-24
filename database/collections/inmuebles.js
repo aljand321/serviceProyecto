@@ -1,5 +1,6 @@
 const mongoose = require("../connect");
 const Schema = require("mongoose").Schema;
+var usuario = mongoose.model('user');
 var casaSchema = {
   tipo : String,
   estado : String,
@@ -14,7 +15,7 @@ var casaSchema = {
   garage : String,
   superficie : String,
   correo : String,
-  user: {type: Schema.ObjectId, ref: "user"}
+  user: {type: Schema.ObjectId, ref: "usuario"}
 };
 var inmuebles = mongoose.model("inmuebles", casaSchema);
 module.exports = inmuebles;
