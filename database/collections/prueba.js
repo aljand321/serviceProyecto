@@ -1,10 +1,10 @@
 const mongoose = require("../connect");
-var userSchema = {
+var pruebaSchema = {
   Title : String,
   Year : String,
   imdbID : String,
-  Type : Number,
+  Type : String,
   Poster : String
 };
-var user = mongoose.model("user", userSchema);
-module.exports = user;
+var prueba = mongoose.model("prueba", pruebaSchema);
+module.exports = prueba;

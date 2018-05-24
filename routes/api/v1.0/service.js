@@ -2,8 +2,77 @@ var express = require('express');
 var router = express.Router();
 var _ = require("underscore");
 
+
 var User = require("../../../database/collections/user");
 var Inmuebles = require("../../../database/collections/inmuebles");
+var Prueba = require("../../../database/collections/prueba");
+
+//Prueba
+
+/*router.post("/prueba", (req, res) => {
+
+  var prueba = {
+    Title : req.body.Title,
+    Year : req.body.Year,
+    imdbID : req.body.imdbID,
+    Type : req.body.Type,
+    Poster : req.body.Poster
+  };
+  var pruebaData = new Prueba(prueba);
+
+  pruebaData.save().then( () => {
+      res.status(200).json({
+        "msn" : "Registrado con exito"
+      });
+  });
+
+});*/
+
+//ruta para listar los libros mas la informacion completaa del autor
+router.get("/prueba", (req, res, next) => {
+  //aqui utilizamos populate() para poblar el parametro "autor" con toda la info acerca del mismo
+  Prueba.find({}).populate("user").exec( (error, docs) => {
+    //checkeamos hay error de algun tipo
+    if (error) {
+      //devolvemos el error;
+      res.status(400).json({error : error});return;
+    }else{
+      res.status(200).json({
+
+          //Podriamos devolver los documentos tal cual los recibimos;
+          //pero tb podemos remapearlos (si vale el termino) segun nuestros requerimientos
+          //Por ej. : usamos la funcion map() de javascript ;
+
+        Prueba : docs.map(doc => {
+          return {
+            //aqui reesctructuramos cada documento
+            detalle : {
+
+              Title : doc.Title,
+              Year : doc.Year,
+              imdbID : doc.imdbID,
+              Type : doc.Type,
+              Poster : doc.Poster
+            },
+
+            //Aqui tambien podemos devolver algun tipo de mensaje u otro que veamos conveniente
+
+          }
+        })
+      });
+    }
+  })
+});
+
+//mostrar usuarios
+
+router.get("/prueba", (req, res, next) =>{
+  Prueba.find({}).exec( (error, docs) => {
+      res.status(200).json(docs);
+  })
+});
+
+
 
 //Un pequeño help us
 //funcion que permite controlar con Regex que el id cumpla con el formato ObjectId de mongo
@@ -164,37 +233,34 @@ router.post("/inmuebles", (req, res) => {
   };
   User.findOne({email : req.body.correo}).exec((error, docs) => {
     //User.findOne({
-    
-  })
-  if(error){
-    res.status(200).json({
-      "msn" : error
-    })
-    return
-  }
-  if(docs != null){
-    var id= docs._id;
-    inmuebles.user = id;
-    //console.log(inmuebles);
-    var casaData = new Inmuebles(inmuebles);
-    casaData.save().then( () => {
-        res.status(200).json({
-          "msn" : "Registrado con exito"
-        })
-    }).catch((err) => {
-      res.status(400).json({
-        "msn" : err
+    if(error){
+      res.status(200).json({
+        "msn" : error
       })
-    });
-  }
-  else{
-    res.status(200).json({
-      "msn" : "El usuario no esta Registrado"
-    })
-  }
+      return
+    }
+    if(docs != null){
+      var id= docs._id;
+      inmuebles.user = id;
+      //console.log(inmuebles);
+      var casaData = new Inmuebles(inmuebles);
+      casaData.save().then( () => {
+          res.status(200).json({
+            "msn" : "Registrado con exito"
+          })
+      }).catch((err) => {
+        res.status(400).json({
+          "msn" : err
+        })
+      });
+    }
+    else{
+      res.status(200).json({
+        "msn" : "El usuario no esta Registrado"
+      })
+    }
   })
-
-});
+  });
 
 
 //mostrar inmuebles+-
