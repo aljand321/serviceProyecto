@@ -5,18 +5,15 @@ var _ = require("underscore");
 
 var User = require("../../../database/collections/user");
 var Inmuebles = require("../../../database/collections/inmuebles");
-//var Prueba = require("../../../database/collections/prueba");
+var Prueba = require("../../../database/collections/prueba");
 
 //Prueba
 
-/*router.post("/prueba", (req, res) => {
+router.post("/prueba", (req, res) => {
 
   var prueba = {
-    Title : req.body.Title,
-    Year : req.body.Year,
-    imdbID : req.body.imdbID,
-    Type : req.body.Type,
-    Poster : req.body.Poster
+    nombre : req.body.nombre,
+    apellido : req.body.apellido
   };
   var pruebaData = new Prueba(prueba);
 
@@ -26,7 +23,14 @@ var Inmuebles = require("../../../database/collections/inmuebles");
       });
   });
 
-});*/
+});
+
+//read user 1
+router.get("/prueba", (req, res, next) =>{
+  Prueba.find({}).exec( (error, docs) => {
+      res.status(200).json(docs);
+  })
+});
 
 //ruta para listar los libros mas la informacion completaa del autor
 /*router.get("/prueba", (req, res, next) => {
@@ -66,11 +70,6 @@ var Inmuebles = require("../../../database/collections/inmuebles");
 
 //mostrar usuarios
 
-router.get("/prueba", (req, res, next) =>{
-  Prueba.find({}).exec( (error, docs) => {
-      res.status(200).json(docs);
-  })
-});
 
 
 
@@ -317,12 +316,14 @@ router.delete(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
      res.status(200).json(docs);
  });
 });
+
 //id:_delusuario
 router.post("/id_user", (req, res) => {
   User.findOne({nombre : req.body.user },"_id").exec( (error, docs) => {
     res.status(200).json(docs);
   })
 });
+
 
 router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
   var url = req.url;
