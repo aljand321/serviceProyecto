@@ -317,14 +317,12 @@ router.delete(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
      res.status(200).json(docs);
  });
 });
-<<<<<<< HEAD
 //id:_delusuario
 router.post("/id_user", (req, res) => {
   User.findOne({nombre : req.body.user },"_id").exec( (error, docs) => {
     res.status(200).json(docs);
   })
 });
-=======
 
 router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
   var url = req.url;
