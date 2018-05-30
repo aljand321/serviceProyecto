@@ -332,7 +332,7 @@ router.get("/id_user", (req, res, next) =>{
 });
 
 
-=======
+
 router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
   var url = req.url;
   var id = url.split("/")[2];

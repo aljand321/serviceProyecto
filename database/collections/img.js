@@ -1,4 +1,4 @@
-const mongoose = require("../connect");
+onst mongoose = require("../connect");
 var imgSchema = {
   name : String,
   physicalpath : String,
