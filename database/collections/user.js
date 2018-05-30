@@ -4,6 +4,8 @@ var userSchema = {
   apellido : String,
   email : String,
   numeroTelefono : Number,
+  ciudad : String,
+  direccionActual : String,
   password : String
 };
 var user = mongoose.model("user", userSchema);
