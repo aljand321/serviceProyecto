@@ -213,7 +213,7 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
 
 //añadiendo inmuebles
 
-router.post("/inmuebles", (req, res) => {
+router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
 
   var inmuebles = {
 
@@ -318,7 +318,7 @@ router.delete(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
  });
 });
 
-<<<<<<< HEAD
+
 router.get("/id_inm", (req, res, next) =>{
   Inmuebles.find({},"id_user").exec( (error, docs) => {
       res.status(200).json(docs);
@@ -353,7 +353,5 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
       return;
   });
 });
-
-
 
 module.exports = router;
