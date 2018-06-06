@@ -379,18 +379,18 @@ router.post(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
         var home = {
           gallery: new Array()
         }
-        Home.findOne({_id:id}).exec( (err, docs) =>{
+        Inmuebles.findOne({_id:id}).exec( (err, docs) =>{
           //console.log(docs);
           var data = docs.gallery;
           var aux = new  Array();
           if (data.length == 1 && data[0] == "") {
-            home.gallery.push("http://192.168.43.22:7777/api/v1.0/homeimg/" + infoimg._id)
+            home.gallery.push("http://192.168.1.2:7777/api/v1.0/homeimg/" + infoimg._id)
           } else {
-            aux.push("http://192.168.43.22:7777/api/v1.0/homeimg/" + infoimg._id);
+            aux.push("http://192.168.1.2:7777/api/v1.0/homeimg/" + infoimg._id);
             data = data.concat(aux);
             home.gallery = data;
           }
-          Home.findOneAndUpdate({_id : id}, home, (err, params) => {
+          Inmuebles.findOneAndUpdate({_id : id}, home, (err, params) => {
               if (err) {
                 res.status(500).json({
                   "msn" : "error en la actualizacion del usuario"
