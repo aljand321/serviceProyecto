@@ -1,49 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var _ = require("underscore");
-var multer = require('multer');
-
+var fs = require('fs');
 
 var User = require("../../../database/collections/user");
 var Inmuebles = require("../../../database/collections/inmuebles");
-var Img = require("../../../database/collections/img");
-
-var jwt = require("jsonwebtoken");
-
-var storage = multer.diskStorage({
-  destination: "./public/avatars",
-  filename: function (req, file, cb) {
-    console.log("-------------------------");
-    console.log(file);
-    cb(null, "IMG_" + Date.now() + ".jpg");
-  }
-});
-
-var upload = multer({
-  storage: storage
-}).single("img");;
-//Middelware
-function verifytoken (req, res, next) {
-  //Recuperar el header
-  const header = req.headers["authorization"];
-  if (header  == undefined) {
-      res.status(403).json({
-        msn: "No autotizado"
-      })
-  } else {
-      req.token = header.split(" ")[1];
-      jwt.verify(req.token, "secretkey123", (err, authData) => {
-        if (err) {
-          res.status(403).json({
-            msn: "No autotizado"
-          })
-        } else {
-          next();
-        }
-      });
-  }
-}
-//var Prueba = require("../../../database/collections/prueba");
+var Prueba = require("../../../database/collections/prueba");
 
 //Prueba
 
@@ -67,7 +29,7 @@ function verifytoken (req, res, next) {
 });*/
 
 //ruta para listar los libros mas la informacion completaa del autor
-/*router.get("/prueba", (req, res, next) => {
+router.get("/prueba", (req, res, next) => {
   //aqui utilizamos populate() para poblar el parametro "autor" con toda la info acerca del mismo
   Prueba.find({}).populate("user").exec( (error, docs) => {
     //checkeamos hay error de algun tipo
@@ -100,7 +62,7 @@ function verifytoken (req, res, next) {
       });
     }
   })
-});*/
+});
 
 //mostrar usuarios
 
@@ -114,7 +76,7 @@ router.get("/prueba", (req, res, next) =>{
 
 //Un pequeño help us
 //funcion que permite controlar con Regex que el id cumpla con el formato ObjectId de mongo
-/*router.param(function(param,validator){
+router.param(function(param,validator){
   return function(req,res,next,val){
     //hacemos la validacion con  .test() propio de regex y comparamos
     if (validator.test(val) == true) {
@@ -124,7 +86,7 @@ router.get("/prueba", (req, res, next) =>{
       res.status(400).json({error : "El id " + val + " , No cumple con el formato requerido"});
     }
   }
-});*/
+});
 
 //router.param('id',/^[a-z0-9]{24}$/);
 
@@ -251,7 +213,7 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
 
 //añadiendo inmuebles
 
-router.post("/inmuebles", (req, res) => {
+router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
 
   var inmuebles = {
 
@@ -267,7 +229,6 @@ router.post("/inmuebles", (req, res) => {
     cantidadBaños : req.body.cantidadBaños,
     garage : req.body.garage,
     superficie : req.body.superficie,
-    gallery : "",
     correo : req.body.correo
   };
   User.findOne({email : req.body.correo}).exec((error, docs) => {
@@ -356,12 +317,21 @@ router.delete(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
      res.status(200).json(docs);
  });
 });
-//id:_delusuario
-router.post("/id_user", (req, res) => {
-  User.findOne({nombre : req.body.user },"_id").exec( (error, docs) => {
-    res.status(200).json(docs);
+
+
+router.get("/id_inm", (req, res, next) =>{
+  Inmuebles.find({},"id_user").exec( (error, docs) => {
+      res.status(200).json(docs);
   })
 });
+
+router.get("/id_user", (req, res, next) =>{
+  User.find({},"_id").exec( (error, docs) => {
+      res.status(200).json(docs);
+  })
+});
+
+
 
 router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
   var url = req.url;
@@ -383,59 +353,5 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
       return;
   });
 });
-//aqui empieza el servicio de la img
-router.post(/inmuebleimg\/[a-z0-9]{1,}$/, (req, res) => {
-  var url = req.url;
-  var id = url.split("/")[2];
-  upload(req, res, (err) => {
-    if (err) {
-      res.status(500).json({
-        "msn" : "No se ha podido subir la imagen"
-      });
-    } else {
-      var ruta = req.file.path.substr(6, req.file.path.length);
-      console.log(ruta);
-      var img = {
-        idhome: id,
-        name : req.file.originalname,
-        physicalpath: req.file.path,
-        relativepath: "http://localhost:7777" + ruta
-      };
-      var imgData = new Img(img);
-      imgData.save().then( (infoimg) => {
-        //content-type
-        //Update User IMG
-        var home = {
-          gallery: new Array()
-        }
-        Inmuebles.findOne({_id:id}).exec( (err, docs) =>{
-          //console.log(docs);
-          var data = docs.gallery;
-          var aux = new  Array();
-          if (data.length == 1 && data[0] == "") {
-            home.gallery.push("http://192.168.1.2:7777/api/v1.0/inmuebleimg/" + infoimg._id)
-          } else {
-            aux.push("http://192.168.1.2:7777/api/v1.0/inmuebleimg/" + infoimg._id);
-            data = data.concat(aux);
-            home.gallery = data;
-          }
-          Inmuebles.findOneAndUpdate({_id : id}, home, (err, params) => {
-              if (err) {
-                res.status(500).json({
-                  "msn" : "error en la actualizacion del usuario"
-                });
-                return;
-              }
-              res.status(200).json(
-                req.file
-              );
-              return;
-          });
-        });
-      });
-    }
-  });
-});
-
 
 module.exports = router;
