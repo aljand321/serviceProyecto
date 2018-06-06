@@ -1,7 +1,7 @@
 const mongoose = require("../connect");
 var mon = require('mongoose');
- var Schema = mon.Schema;
-var imgSchema = {
+var Shema = mon.Shema;
+var imgSchema = new Shema {
   name : String,
   idhome: String,
   physicalpath : String,
