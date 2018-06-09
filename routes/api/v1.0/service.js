@@ -9,7 +9,7 @@ var Mapa = require("../../../database/collections/mapa");
 
 //Prueba
 
-/*router.post("/prueba", (req, res) => {
+router.post("/prueba", (req, res) => {
 
   var prueba = {
     Title : req.body.Title,
@@ -26,7 +26,7 @@ var Mapa = require("../../../database/collections/mapa");
       });
   });
 
-});*/
+});
 
 //ruta para listar los libros mas la informacion completaa del autor
 router.get("/prueba", (req, res, next) => {
@@ -64,13 +64,12 @@ router.get("/prueba", (req, res, next) => {
   })
 });
 
-//mostrar usuarios
-
+/*
 router.get("/prueba", (req, res, next) =>{
   Prueba.find({}).exec( (error, docs) => {
       res.status(200).json(docs);
   })
-});
+});*/
 
 
 
@@ -318,7 +317,7 @@ router.delete(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
  });
 });
 
-//<<<<<<< HEAD
+
 router.get("/id_inm", (req, res, next) =>{
   Inmuebles.find({},"id_user").exec( (error, docs) => {
       res.status(200).json(docs);
