@@ -2,10 +2,10 @@ var express = require('express');
 var router = express.Router();
 var _ = require("underscore");
 
-
 var User = require("../../../database/collections/user");
 var Inmuebles = require("../../../database/collections/inmuebles");
 var Prueba = require("../../../database/collections/prueba");
+var Mapa = require("../../../database/collections/mapa");
 
 //Prueba
 
@@ -318,7 +318,7 @@ router.delete(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
  });
 });
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 router.get("/id_inm", (req, res, next) =>{
   Inmuebles.find({},"id_user").exec( (error, docs) => {
       res.status(200).json(docs);
@@ -354,6 +354,35 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
   });
 });
 
+//mapas
+router.post("/mapa", (req, res) => {
+  //Ejemplo de validacion
+  if (req.body.name == "" && req.body.email == "") {
+    res.status(400).json({
+      "msn" : "formato incorrecto"
+    });
+    return;
+  }
+  var mapa = {
+    calle : req.body.street,
+    descripcion : req.body.descripcion,
+    precio : req.body.price,
+    lat : req.body.lat,
+    lon : req.body.lon,
+    vecinos : req.body.neighborhood,
+    ciudad : req.body.city,
+    galeria: "",
+    contact: req.body.contact
+  };
+  var mapaData = new Mapa(mapa);
 
+  mapaData.save().then( (rr) => {
+    //content-type
+    res.status(200).json({
+      "id" : rr._id,
+      "msn" : "usuario Registrado con exito "
+    });
+  });
+});
 
 module.exports = router;
