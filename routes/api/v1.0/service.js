@@ -9,7 +9,7 @@ var Prueba = require("../../../database/collections/prueba");
 
 //Prueba
 
-/*router.post("/prueba", (req, res) => {
+router.post("/prueba", (req, res) => {
 
   var prueba = {
     Title : req.body.Title,
@@ -26,7 +26,7 @@ var Prueba = require("../../../database/collections/prueba");
       });
   });
 
-});*/
+});
 
 //ruta para listar los libros mas la informacion completaa del autor
 router.get("/prueba", (req, res, next) => {
@@ -64,13 +64,12 @@ router.get("/prueba", (req, res, next) => {
   })
 });
 
-//mostrar usuarios
-
+/*
 router.get("/prueba", (req, res, next) =>{
   Prueba.find({}).exec( (error, docs) => {
       res.status(200).json(docs);
   })
-});
+});*/
 
 
 
