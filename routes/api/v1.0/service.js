@@ -1,4 +1,5 @@
 var express = require('express');
+var multer = require('multer');
 var router = express.Router();
 var _ = require("underscore");
 var fs = require('fs');
@@ -6,8 +7,23 @@ var fs = require('fs');
 var User = require("../../../database/collections/user");
 var Inmuebles = require("../../../database/collections/inmuebles");
 var Prueba = require("../../../database/collections/prueba");
+var Img = require("../../../database/collections/img");
 
-//Prueba
+var jwt = require("jsonwebtoken");
+
+var storage = multer.diskStorage({
+  destination: "./public/avatars",
+  filename: function (req, file, cb) {
+    console.log("-------------------------");
+    console.log(file);
+    cb(null, "IMG_" + Date.now() + ".jpg");
+  }
+});
+
+/*var upload = multer({
+  storage: storage
+}).single("img");
+//Prueba*/
 
 /*router.post("/prueba", (req, res) => {
 
@@ -229,6 +245,7 @@ router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
     cantidadBaños : req.body.cantidadBaños,
     garage : req.body.garage,
     superficie : req.body.superficie,
+    gallery: "",
     correo : req.body.correo
   };
   User.findOne({email : req.body.correo}).exec((error, docs) => {
@@ -384,9 +401,9 @@ router.post(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
           var data = docs.gallery;
           var aux = new  Array();
           if (data.length == 1 && data[0] == "") {
-            home.gallery.push("http://192.168.1.2:7777/api/v1.0/homeimg/" + infoimg._id)
+            home.gallery.push("http://192.168.1.7:7777/api/v1.0/homeimg/" + infoimg._id)
           } else {
-            aux.push("http://192.168.1.2:7777/api/v1.0/homeimg/" + infoimg._id);
+            aux.push("http://192.168.1.7:7777/api/v1.0/homeimg/" + infoimg._id);
             data = data.concat(aux);
             home.gallery = data;
           }
