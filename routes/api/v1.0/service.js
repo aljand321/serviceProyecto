@@ -12,17 +12,16 @@ var Img = require("../../../database/collections/img");
 var jwt = require("jsonwebtoken");
 
 var storage = multer.diskStorage({
-  destination: "./public/avatars",
+  destination: function(req, file, cb){
+    cb(null ,'./public/avatars')
+  },
   filename: function (req, file, cb) {
     console.log("-------------------------");
     console.log(file);
-    cb(null, "IMG_" + Date.now() + ".jpg");
+    cb(null, file.originalname + "-" +  Date.now() + ".jpg");
   }
 });
-
-/*var upload = multer({
-  storage: storage
-}).single("img");
+var upload = multer({storage : storage}).single('avatar');
 //Prueba*/
 
 /*router.post("/prueba", (req, res) => {
@@ -372,6 +371,29 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
 });
 //para cargar la imagen de los inmuebles
 
+router.post("/userimg", (req, res) => {
+  upload(req, res, (error) => {
+    if(error){
+      res.status(500).json({
+        "msn" : "nO SE HA PUDO"
+        return;
+      });
+    }else{
+      var ruta = req.file.path.substr(6, req.file.path.length);
+      console.log(ruta);
+      var img = {
+        name : req.file.originalname,
+        idhome: req.file.path,
+        physicalpath : req.file.path,
+        relativepath : "http://localhost:7777" + ruta
+      };
+      var imDato = new Img(img);
+        imDato.save().then( () => {
+          res.status(200).json( req.file);
+        });
+    }
+  });
+});
 router.post(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
   var url = req.url;
   var id = url.split("/")[2];
