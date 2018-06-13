@@ -1,9 +1,9 @@
 var express = require('express');
+
 var multer = require('multer');
 var router = express.Router();
 //var _ = require("underscore");
 var fs = require('fs');
-
 var User = require("../../../database/collections/user");
 var Inmuebles = require("../../../database/collections/inmuebles");
 var Prueba = require("../../../database/collections/prueba");
@@ -25,7 +25,6 @@ var upload = multer({storage : storage}).single('img');
 //Prueba*/
 
 /*router.post("/prueba", (req, res) => {
-
   var prueba = {
     Title : req.body.Title,
     Year : req.body.Year,
@@ -40,6 +39,7 @@ var upload = multer({storage : storage}).single('img');
         "msn" : "Registrado con exito"
       });
   });
+
 
 });*/
 
@@ -79,13 +79,16 @@ router.get("/prueba", (req, res, next) => {
   })
 });
 
+
 //mostrar usuarios
+
 
 router.get("/prueba", (req, res, next) =>{
   Prueba.find({}).exec( (error, docs) => {
       res.status(200).json(docs);
   })
 });
+
 
 
 
@@ -104,7 +107,6 @@ router.param(function(param,validator){
 });
 
 //router.param('id',/^[a-z0-9]{24}$/);
-
 //añadiendo a usario
 
 router.post("/user", (req, res) => {
@@ -228,8 +230,8 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
 
 //añadiendo inmuebles
 
-router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
 
+router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
   var inmuebles = {
 
     tipo : req.body.tipo,
@@ -286,6 +288,7 @@ router.get("/inmuebles_ecp", (req, res, next) =>{
       res.status(200).json({docs});
     })
   });
+
 
 //ruta para listar los libros mas la informacion completaa del autor
 router.get("/inmuebles", (req, res, next) => {
@@ -369,6 +372,7 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
       return;
   });
 });
+
 //para cargar la imagen de los inmuebles
 
 router.post("/userimg", (req, res) => {
@@ -472,6 +476,4 @@ router.get(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
     res.status(200).send(img);
   });
 });
-
-
 module.exports = router;
