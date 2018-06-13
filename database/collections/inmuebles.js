@@ -12,6 +12,7 @@ var casaSchema = {
   cantidadBaños : String,
   garage : String,
   superficie : String,
+  gallery: Array,
   correo : String,
   user: {type: Schema.ObjectId, ref: "user"}
 };
