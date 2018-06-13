@@ -1,9 +1,9 @@
 var express = require('express');
+
 var multer = require('multer');
 var router = express.Router();
 //var _ = require("underscore");
 var fs = require('fs');
-
 var User = require("../../../database/collections/user");
 var Inmuebles = require("../../../database/collections/inmuebles");
 var Prueba = require("../../../database/collections/prueba");
@@ -49,9 +49,6 @@ var upload = multer({storage : storage}).single('img');
 
 <<<<<<< HEAD
 });
-=======
-});*/
-
 
 //ruta para listar los libros mas la informacion completaa del autor
 router.get("/prueba", (req, res, next) => {
@@ -94,7 +91,8 @@ router.get("/prueba", (req, res, next) => {
 =======
 //mostrar usuarios
 
->>>>>>> aa6ddf82e2b4b9b510e9667a0f8ef3cf3533c008
+
+>>>>>>> 4872d41fca11dbed117e45ee5a8bb1ac2eb25f1e
 router.get("/prueba", (req, res, next) =>{
   Prueba.find({}).exec( (error, docs) => {
       res.status(200).json(docs);
@@ -247,8 +245,8 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
 
 //añadiendo inmuebles
 
-router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
 
+router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
   var inmuebles = {
 
     tipo : req.body.tipo,
@@ -301,51 +299,15 @@ router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
 //mostrar inmuebles+-
 
 
-/*router.get("/inmuebles", (req, res, next) =>{
-=======
+
+
 //tipo , precio , ciudad ,descripcion
 router.get("/inmuebles_ecp", (req, res, next) =>{
->>>>>>> aa6ddf82e2b4b9b510e9667a0f8ef3cf3533c008
   Inmuebles.find({}).exec( (error, docs) => {
       res.status(200).json({docs});
     })
   });
 
-//ruta para listar los libros mas la informacion completaa del autor
-router.get("/inmuebles", (req, res, next) => {
-  //aqui utilizamos populate() para poblar el parametro "autor" con toda la info acerca del mismo
-  Inmuebles.find({}).populate("user").exec( (error, docs) => {
-    //checkeamos hay error de algun tipo
-    if (error) {
-      //devolvemos el error;
-      res.status(400).json({error : error});return;
-    }else{
-      res.status(200).json({
-
-          //Podriamos devolver los documentos tal cual los recibimos;
-          //pero tb podemos remapearlos (si vale el termino) segun nuestros requerimientos
-          //Por ej. : usamos la funcion map() de javascript ;
-
-        Inmuebles : docs.map(doc => {
-          return {
-            //aqui reesctructuramos cada documento
-            detalleInmueble : {
-
-              tipo : doc.tipo,
-              estado : doc.estado,
-              precio : doc.precio,
-
-              superficie : doc.superficie
-            },
-            detalleUser : doc.user,
-            //Aqui tambien podemos devolver algun tipo de mensaje u otro que veamos conveniente
-            status : 'OK'
-          }
-        })
-      });
-    }
-  })
-});*/
 
 //ruta para listar los libros mas la informacion completaa del autor
 router.get("/inmuebles", (req, res, next) => {
@@ -579,5 +541,4 @@ router.get(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
     res.status(200).send(img);
   });
 });
-
 module.exports = router;
