@@ -1,7 +1,7 @@
 var express = require('express');
 var multer = require('multer');
 var router = express.Router();
-var _ = require("underscore");
+//var _ = require("underscore");
 var fs = require('fs');
 
 var User = require("../../../database/collections/user");
@@ -9,7 +9,7 @@ var Inmuebles = require("../../../database/collections/inmuebles");
 var Prueba = require("../../../database/collections/prueba");
 var Img = require("../../../database/collections/img");
 
-var jwt = require("jsonwebtoken");
+//var jwt = require("jsonwebtoken");
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb){
@@ -21,7 +21,7 @@ var storage = multer.diskStorage({
     cb(null, file.originalname + "-" +  Date.now() + ".jpg");
   }
 });
-var upload = multer({storage : storage}).single('avatar');
+var upload = multer({storage : storage}).single('img');
 //Prueba*/
 
 /*router.post("/prueba", (req, res) => {
@@ -280,12 +280,12 @@ router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
 
 
 //mostrar inmuebles+-
-
-/*router.get("/inmuebles", (req, res, next) =>{
+//tipo , precio , ciudad ,descripcion
+router.get("/inmuebles_ecp", (req, res, next) =>{
   Inmuebles.find({}).exec( (error, docs) => {
-      res.status(200).json(docs);
-  })
-});*/
+      res.status(200).json({docs});
+    })
+  });
 
 //ruta para listar los libros mas la informacion completaa del autor
 router.get("/inmuebles", (req, res, next) => {
@@ -375,8 +375,8 @@ router.post("/userimg", (req, res) => {
   upload(req, res, (error) => {
     if(error){
       res.status(500).json({
-        "msn" : "nO SE HA PUDO"
-        return;
+        "msn" : "No se ha podido subir la imagen"
+
       });
     }else{
       var ruta = req.file.path.substr(6, req.file.path.length);
@@ -394,6 +394,10 @@ router.post("/userimg", (req, res) => {
     }
   });
 });
+
+
+//en la url se envia con la id del inmueble registrado
+//en key se pone img
 router.post(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
   var url = req.url;
   var id = url.split("/")[2];
@@ -419,13 +423,15 @@ router.post(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
           gallery: new Array()
         }
         Inmuebles.findOne({_id:id}).exec( (err, docs) =>{
-          //console.log(docs);
+          console.log(docs);
           var data = docs.gallery;
           var aux = new  Array();
           if (data.length == 1 && data[0] == "") {
-            home.gallery.push("http://192.168.1.7:7777/api/v1.0/homeimg/" + infoimg._id)
+            //aqui se pone la ip de la maquina donde esta corriendo , es decir nuestra ip
+            home.gallery.push("http://192.168.43.185:7777/api/v1.0/homeimg/" + infoimg._id)
           } else {
-            aux.push("http://192.168.1.7:7777/api/v1.0/homeimg/" + infoimg._id);
+            // aqui tambien nuestra ip 
+            aux.push("http://192.168.43.185:7777/api/v1.0/homeimg/" + infoimg._id);
             data = data.concat(aux);
             home.gallery = data;
           }
@@ -446,5 +452,26 @@ router.post(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
     }
   });
 });
+//obtener la imagen
+//en la url se envia con la id de la foto o imagen registrada
+router.get(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
+  var url = req.url;
+  var id = url.split("/")[2];
+  console.log(id)
+  Img.findOne({_id: id}).exec((err, docs) => {
+    if (err) {
+      res.status(500).json({
+        "msn": "Sucedio algun error en el servicio"
+      });
+      return;
+    }
+    //regresamos la imagen deseada
+    var img = fs.readFileSync("./" + docs.physicalpath);
+    //var img = fs.readFileSync("./public/avatars/img.jpg");
+    res.contentType('image/jpeg');
+    res.status(200).send(img);
+  });
+});
+
 
 module.exports = router;
