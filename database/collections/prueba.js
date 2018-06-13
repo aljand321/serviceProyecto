@@ -1,8 +1,10 @@
-/*const mongoose = require("../connect");
+const mongoose = require("../connect");
 var pruebaSchema = {
-  nombre : String,
-  apellido : String
+  Title : String,
+  Year : String,
+  imdbID : String,
+  Type : String,
+  Poster : String
 };
 var prueba = mongoose.model("prueba", pruebaSchema);
 module.exports = prueba;
-*/
