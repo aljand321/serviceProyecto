@@ -7,14 +7,12 @@ var fs = require('fs');
 var User = require("../../../database/collections/user");
 var Inmuebles = require("../../../database/collections/inmuebles");
 var Prueba = require("../../../database/collections/prueba");
-<<<<<<< HEAD
+var Img = require("../../../database/collections/img");
 var Mapa = require("../../../database/collections/mapa");
 
 //Prueba
 
-router.post("/prueba", (req, res) => {
-=======
-var Img = require("../../../database/collections/img");
+
 
 //var jwt = require("jsonwebtoken");
 
@@ -53,7 +51,7 @@ var upload = multer({storage : storage}).single('img');
 });
 =======
 });*/
->>>>>>> aa6ddf82e2b4b9b510e9667a0f8ef3cf3533c008
+
 
 //ruta para listar los libros mas la informacion completaa del autor
 router.get("/prueba", (req, res, next) => {
@@ -91,7 +89,7 @@ router.get("/prueba", (req, res, next) => {
   })
 });
 
-<<<<<<< HEAD
+
 /*
 =======
 //mostrar usuarios
@@ -103,9 +101,8 @@ router.get("/prueba", (req, res, next) =>{
   })
 <<<<<<< HEAD
 });*/
-=======
-});
->>>>>>> aa6ddf82e2b4b9b510e9667a0f8ef3cf3533c008
+
+
 
 
 
@@ -123,11 +120,9 @@ router.param(function(param,validator){
   }
 });
 
-<<<<<<< HEAD
-router.param('id',/^[a-z0-9]{24}$/);
-=======
+
 //router.param('id',/^[a-z0-9]{24}$/);
->>>>>>> aa6ddf82e2b4b9b510e9667a0f8ef3cf3533c008
+
 
 //añadiendo a usario
 
@@ -268,10 +263,7 @@ router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
     cantidadBaños : req.body.cantidadBaños,
     garage : req.body.garage,
     superficie : req.body.superficie,
-<<<<<<< HEAD
-=======
     gallery: "",
->>>>>>> aa6ddf82e2b4b9b510e9667a0f8ef3cf3533c008
     correo : req.body.correo
   };
   User.findOne({email : req.body.correo}).exec((error, docs) => {
@@ -307,7 +299,7 @@ router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
 
 
 //mostrar inmuebles+-
-<<<<<<< HEAD
+
 
 /*router.get("/inmuebles", (req, res, next) =>{
 =======
@@ -403,8 +395,7 @@ router.delete(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
 });
 
 
-<<<<<<< HEAD
-=======
+
 // eliminar inmuebles
 
 router.delete(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
@@ -416,7 +407,7 @@ router.delete(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
 });
 
 
->>>>>>> aa6ddf82e2b4b9b510e9667a0f8ef3cf3533c008
+
 router.get("/id_inm", (req, res, next) =>{
   Inmuebles.find({},"id_user").exec( (error, docs) => {
       res.status(200).json(docs);
@@ -451,7 +442,7 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
       return;
   });
 });
-<<<<<<< HEAD
+
 
 //mapas
 router.post("/mapa", (req, res) => {
@@ -484,7 +475,7 @@ router.post("/mapa", (req, res) => {
   });
 });
 
-=======
+
 //para cargar la imagen de los inmuebles
 
 router.post("/userimg", (req, res) => {
@@ -544,10 +535,10 @@ router.post(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
           var aux = new  Array();
           if (data.length == 1 && data[0] == "") {
             //aqui se pone la ip de la maquina donde esta corriendo , es decir nuestra ip
-            home.gallery.push("http://192.168.43.185:7777/api/v1.0/homeimg/" + infoimg._id)
+            home.gallery.push("http://192.168.1.5:7777/api/v1.0/homeimg/" + infoimg._id)
           } else {
-            // aqui tambien nuestra ip 
-            aux.push("http://192.168.43.185:7777/api/v1.0/homeimg/" + infoimg._id);
+            // aqui tambien nuestra ip
+            aux.push("http://192.168.1.5:7777/api/v1.0/homeimg/" + infoimg._id);
             data = data.concat(aux);
             home.gallery = data;
           }
@@ -589,6 +580,4 @@ router.get(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
   });
 });
 
-
->>>>>>> aa6ddf82e2b4b9b510e9667a0f8ef3cf3533c008
 module.exports = router;
