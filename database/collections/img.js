@@ -1,6 +1,8 @@
-onst mongoose = require("../connect");
+const mongoose = require("../connect");
+const Schema = require("mongoose").Schema;
 var imgSchema = {
   name : String,
+  idhome: String,
   physicalpath : String,
   relativepath : String
 };
