@@ -245,8 +245,8 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
 
 //añadiendo inmuebles
 
-
-router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
+router.post("/inmuebles", (req, res) => { 
+//router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
   var inmuebles = {
 
     tipo : req.body.tipo,
@@ -406,6 +406,7 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
 });
 
 
+
 //mapas
 router.post("/mapa", (req, res) => {
   //Ejemplo de validacion
@@ -541,4 +542,15 @@ router.get(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
     res.status(200).send(img);
   });
 });
+
+router.delete(/img\/[a-z0-9]{1,}$/, (req, res) => {
+ var url = req.url;
+ var id = url.split("/")[2];
+ Inmuebles.find({_id : id}).remove().exec( (err, docs) => {
+     res.status(200).json(docs);
+ });
+
+});
+
+
 module.exports = router;
