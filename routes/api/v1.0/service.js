@@ -254,7 +254,7 @@ router.post("/inmuebles", (req, res) => {
     precio : req.body.precio,
     ciudad : req.body.ciudad,
     region : req.body.region,
-    ubicacion : req.body.tiubicacionpo,
+    ubicacion : req.body.ubicacion,
     //direccion : req.body.direccion,
     descripcion : req.body.descripcion,
     cantidadCuartos : req.body.cantidadCuartos,
