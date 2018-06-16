@@ -245,7 +245,7 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
 
 //añadiendo inmuebles
 
-router.post("/inmuebles", (req, res) => { 
+router.post("/inmuebles", (req, res) => {
 //router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
   var inmuebles = {
 
@@ -255,7 +255,7 @@ router.post("/inmuebles", (req, res) => {
     ciudad : req.body.ciudad,
     region : req.body.region,
     ubicacion : req.body.tiubicacionpo,
-    direccion : req.body.direccion,
+    //direccion : req.body.direccion,
     descripcion : req.body.descripcion,
     cantidadCuartos : req.body.cantidadCuartos,
     cantidadBaños : req.body.cantidadBaños,
