@@ -245,7 +245,7 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
 
 //añadiendo inmuebles
 
-router.post("/inmuebles", (req, res) => { 
+router.post("/inmuebles", (req, res) => {
 //router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
   var inmuebles = {
 
@@ -535,21 +535,32 @@ router.get(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
       });
       return;
     }
-    //regresamos la imagen deseada
-    var img = fs.readFileSync("./" + docs.physicalpath);
-    //var img = fs.readFileSync("./public/avatars/img.jpg");
-    res.contentType('image/jpeg');
-    res.status(200).send(img);
+    else{
+      if(docs){
+        //regresamos la imagen deseada
+        var img = fs.readFileSync("./" + docs.physicalpath);
+        //var img = fs.readFileSync("./public/avatars/img.jpg");
+        res.contentType('image/jpeg');
+        res.status(200).send(img);
+        //regresamos la imagen deseada
+      }
+      else{
+        res.status(424).json({
+          "msn": "La solicitud falló, ,la imagen fue eliminada"
+        });
+        return;
+      }
+    }
+
   });
 });
 
 router.delete(/img\/[a-z0-9]{1,}$/, (req, res) => {
  var url = req.url;
  var id = url.split("/")[2];
- Inmuebles.find({_id : id}).remove().exec( (err, docs) => {
+Img.find({_id : id}).remove().exec( (err, docs) => {
      res.status(200).json(docs);
  });
-
 });
 
 
