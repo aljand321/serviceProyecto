@@ -135,14 +135,28 @@ router.post("/user", (req, res) => {
     direccionActual : req.body.direccionActual,
     password : req.body.password
   };
-  var userData = new User(user);
-
-  userData.save().then( () => {
-      res.status(200).json({
-        "msn" : "Registrado con exito"
-      });
-  });
-
+ User.findOne({email : req.body.email}).exec( (error, docs) => {
+   if(docs != null){
+     res.status(200).json({
+       "msn" : "el email ya esta en uso"
+     });
+   }
+   else{
+     if(error){
+       res.status(401).json({
+         "msn" : "servicio a fallado"
+       });
+     }
+     else{
+       var userData = new User(user);
+       userData.save().then( () => {
+           res.status(200).json({
+             "msn" : "Registrado con exito"
+           });
+       });
+     }
+   }
+ });
 });
 
 //mostrar usuarios
@@ -377,7 +391,7 @@ router.get("/id_inm", (req, res, next) =>{
 });
 
 router.get("/id_user", (req, res, next) =>{
-  User.find({},"_id").exec( (error, docs) => {
+  User.find({},"email").exec( (error, docs) => {
       res.status(200).json(docs);
   })
 });
