@@ -6,7 +6,6 @@ var casaSchema = {
   precio : String,
   ciudad : String,
   region : String,
-  ubicacion : Array,
   descripcion : String,
   cantidadCuartos : String,
   cantidadBaños : String,
