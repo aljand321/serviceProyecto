@@ -268,13 +268,15 @@ router.post("/inmuebles", (req, res) => {
     precio : req.body.precio,
     ciudad : req.body.ciudad,
     region : req.body.region,
-    ubicacion : req.body.ubicacion,
+    ubicacion : "",
     //direccion : req.body.direccion,
     descripcion : req.body.descripcion,
     cantidadCuartos : req.body.cantidadCuartos,
     cantidadBaños : req.body.cantidadBaños,
     garage : req.body.garage,
     superficie : req.body.superficie,
+    lat : req.body.lat,
+    lon : req.body.lon,
     gallery: "",
     correo : req.body.correo
   };
@@ -422,7 +424,9 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
 
 
 //mapas
-router.post("/mapa", (req, res) => {
+router.post(/mapa\/[a-z0-9]{1,}$/, (req, res) => {
+  var url= req.url;
+  var id = url.split("/")[2];
   //Ejemplo de validacion
   if (req.body.name == "" && req.body.email == "") {
     res.status(400).json({
@@ -433,25 +437,66 @@ router.post("/mapa", (req, res) => {
   var mapa = {
     calle : req.body.street,
     descripcion : req.body.descripcion,
-    precio : req.body.price,
     lat : req.body.lat,
     lon : req.body.lon,
     vecinos : req.body.neighborhood,
     ciudad : req.body.city,
-    galeria: "",
     contact: req.body.contact
   };
   var mapaData = new Mapa(mapa);
 
   mapaData.save().then( (rr) => {
+
+    var mp = {
+      ubicacion: new Array()
+    }
+    Inmuebles.findOne({_id:id}).exec( (error, docs) => {
+      var dt = docs.ubicacion;
+      var aux = new Array();
+      if (dt.length == 1 && dt[0] == ""){
+        mp.ubicacion.push("/api/v1.0/mapa/")
+      }
+      else {
+        aux.push("/api/v1.0/mapa/");
+        dt = dt.concat(aux);
+        mp.ubicacion = dt;
+      }
+      Inmuebles.findOneAndUpdate({_id : id}, mp, (err, params) => {
+          if(err){
+            res.status(500).json({
+              "msn" : "error"
+            });
+            return;
+          }
+          res.status(200).json(req.file);
+          return;
+      });
+    });
     //content-type
     res.status(200).json({
       "id" : rr._id,
-      "msn" : "usuario Registrado con exito "
+      "msn" : "mapa Registrado con exito "
     });
   });
 });
 
+//recuperar el array de la mapa
+router.get(/mapa\/[a-z0-9]{1,}$/, (req, res) => {
+  var url = req.url;
+  var id = url.split("/")[2];
+  console.log(id)
+  Mapa.findOne({_id: id}).exec((err, docs) => {
+    if (err) {
+      res.status(500).json({
+        "msn": "Sucedio algun error en el servicio"
+      });
+      return;
+    }
+    else{
+          res.status(200).json({docs});
+    }
+  });
+});
 
 //para cargar la imagen de los inmuebles
 
@@ -512,10 +557,10 @@ router.post(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
           var aux = new  Array();
           if (data.length == 1 && data[0] == "") {
             //aqui se pone la ip de la maquina donde esta corriendo , es decir nuestra ip
-            home.gallery.push("http://10.10.1.150:7777/api/v1.0/homeimg/" + infoimg._id)
+            home.gallery.push("/api/v1.0/homeimg/" + infoimg._id)
           } else {
             // aqui tambien nuestra ip
-            aux.push("http://10.10.1.150:7777/api/v1.0/homeimg/" + infoimg._id);
+            aux.push("/api/v1.0/homeimg/" + infoimg._id);
             data = data.concat(aux);
             home.gallery = data;
           }
@@ -575,6 +620,39 @@ router.delete(/img\/[a-z0-9]{1,}$/, (req, res) => {
 Img.find({_id : id}).remove().exec( (err, docs) => {
      res.status(200).json(docs);
  });
+});
+
+//FIltrado
+router.get("/inmuebles_f ", (req, res, next) => {
+  var params = req.query;
+  console.log(params);
+  var precio = params.precio;
+  var over = params.over;
+
+  if(precio == undefined && over == undefined){
+    Inmuebles.find({lat: {$ne: null}, lon: {$ne: null}}).exec( (error, docs) => {
+      res.status(200).json({
+        info: docs
+      });
+    })
+    return;
+  }
+ if(over == "equals"){
+   console.log("---------->")
+   Inmuebles.find({precio : precio, lat: {$ne: null}, lon: {$ne: null}}).exec( (error, docs) => {
+     res.status(200).json({
+       info: docs
+     });
+   })
+   return;
+ }
+ else if (over == "true"){
+   Inmuebles.find({precio: {$gt:precio}, lat: {$ne: null}, lon: {$ne: null}}).exec( (error, docs) => {
+     res.status(200).json({
+       info: docs
+     });
+   })
+ }
 });
 
 
