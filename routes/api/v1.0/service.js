@@ -184,6 +184,22 @@ router.get(/user\/[a-z0-9]{1,}$/, (req, res) => {
    })
  });
 
+//leer solo un inmueble
+ router.get(/inmuebles_id\/[a-z0-9]{1,}$/, (req, res) => {
+    var url = req.url;
+    var id = url.split("/")[2];
+    Inmuebles.findOne({_id : id}).exec( (error, docs) => {
+      if (docs != null) {
+          res.status(200).json(docs);
+          return;
+      }
+
+      res.status(200).json({
+        "msn" : "No existe el usario "
+      });
+    })
+  });
+
  //eliminar un usuario
 
  router.delete(/user\/[a-z0-9]{1,}$/, (req, res) => {
@@ -268,11 +284,11 @@ router.post("/inmuebles", (req, res) => {
     precio : req.body.precio,
     ciudad : req.body.ciudad,
     region : req.body.region,
-    ubicacion : "",
+    ubicacion : req.body.ubicacion,
     //direccion : req.body.direccion,
     descripcion : req.body.descripcion,
     cantidadCuartos : req.body.cantidadCuartos,
-    cantidadBaños : req.body.cantidadBaños,
+    cantidadBanios : req.body.cantidadBanios,
     garage : req.body.garage,
     superficie : req.body.superficie,
     lat : req.body.lat,
