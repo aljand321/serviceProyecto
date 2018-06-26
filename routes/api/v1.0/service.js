@@ -47,7 +47,6 @@ var upload = multer({storage : storage}).single('img');
       });
   });
 
-<<<<<<< HEAD
 });
 
 //ruta para listar los libros mas la informacion completaa del autor
@@ -88,16 +87,10 @@ router.get("/prueba", (req, res, next) => {
 
 
 /*
-=======
-//mostrar usuarios
-
-
->>>>>>> 4872d41fca11dbed117e45ee5a8bb1ac2eb25f1e
 router.get("/prueba", (req, res, next) =>{
   Prueba.find({}).exec( (error, docs) => {
       res.status(200).json(docs);
   })
-<<<<<<< HEAD
 });*/
 
 
