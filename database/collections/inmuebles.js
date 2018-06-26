@@ -14,6 +14,7 @@ var casaSchema = {
   lat : Number,
   lon : Number,
   gallery: Array,
+  imagen : Array,
   correo : String,
   user: {type: Schema.ObjectId, ref: "user"}
 };

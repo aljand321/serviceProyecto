@@ -278,6 +278,7 @@ router.post("/inmuebles", (req, res) => {
     lat : req.body.lat,
     lon : req.body.lon,
     gallery: "",
+    imagen : "",
     correo : req.body.correo
   };
   User.findOne({email : req.body.correo}).exec((error, docs) => {
@@ -387,7 +388,7 @@ router.delete(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
 
 
 router.get("/id_inm", (req, res, next) =>{
-  Inmuebles.find({},"id_user").exec( (error, docs) => {
+  Inmuebles.find({precio: "10000"}).exec( (error, docs) => {
       res.status(200).json(docs);
   })
 });
@@ -549,25 +550,47 @@ router.post(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
         //content-type
         //Update User IMG
         var home = {
-          gallery: new Array()
+          gallery: new Array(),
+          imagen : new Array()
         }
+        /*var photo = {
+          imagen: new Array()
+        }*/
+        var picture = "http://localhost:7777" + ruta;
+
+        console.log("ruta de la img"+" " +picture +" "+ "imagen llll ruta");
+
         Inmuebles.findOne({_id:id}).exec( (err, docs) =>{
-          console.log(docs);
+          //console.log(docs);
+
           var data = docs.gallery;
+          var ph = docs.imagen;
           var aux = new  Array();
+          var phaux = new Array();
           if (data.length == 1 && data[0] == "") {
             //aqui se pone la ip de la maquina donde esta corriendo , es decir nuestra ip
-            home.gallery.push("/api/v1.0/homeimg/" + infoimg._id)
-          } else {
+            home.gallery.push("/api/v1.0/homeimg/" + infoimg._id);
+            home.imagen.push("http://localhost:7777" + ruta );
+            //photo.imagen.push(picture);
+
+          }
+          /*if(ph.length == 1 && ph[0] == ""){
+
+          }*/
+          else {
             // aqui tambien nuestra ip
             aux.push("/api/v1.0/homeimg/" + infoimg._id);
+            phaux.push("http://localhost:7777" + ruta);
+            //phaux.push(picture);
             data = data.concat(aux);
+            ph = ph.concat(phaux);
             home.gallery = data;
+            home.imagen = ph;
           }
           Inmuebles.findOneAndUpdate({_id : id}, home, (err, params) => {
               if (err) {
                 res.status(500).json({
-                  "msn" : "error en la actualizacion del usuario"
+                  "msn" : "error en la actualizacion de la imagen"
                 });
                 return;
               }
@@ -576,6 +599,14 @@ router.post(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
               );
               return;
           });
+        /*  Inmuebles.findOneAndUpdate({_id : id}, photo,(err,params) => {
+            if (err) {
+              res.status(500).json({
+                "msn" : "error en la actualizacion de la imagen"
+              });
+              return;
+            }
+          });*/
         });
       });
     }
@@ -655,5 +686,34 @@ router.get("/inmuebles_f ", (req, res, next) => {
  }
 });
 
+//filtro simplificado
+router.get('/filtro', function(req, res){
+  var params = req.query;
+  var precio;
+  var tipo ;
+
+  Inmuebles.find({precio: params.precio }).exec( ( error, docs) => {
+
+    if(error){
+      res.status(400).json({
+        "msn":"error de informacion"
+      });
+      return;
+    }
+    else
+    {
+      if(docs){
+        res.status(200).json({info : docs});
+      }
+      else{
+        res.status(424).json({
+          "msn": "La solicitud falló"
+        });
+        return;
+      }
+    }
+  })
+
+});
 
 module.exports = router;
