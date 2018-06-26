@@ -6,13 +6,15 @@ var casaSchema = {
   precio : String,
   ciudad : String,
   region : String,
-  ubicacion : String,
   descripcion : String,
   cantidadCuartos : String,
   cantidadBaños : String,
   garage : String,
   superficie : String,
+  lat : Number,
+  lon : Number,
   gallery: Array,
+  imagen : Array,
   correo : String,
   user: {type: Schema.ObjectId, ref: "user"}
 };

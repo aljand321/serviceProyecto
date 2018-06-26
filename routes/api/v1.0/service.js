@@ -1,14 +1,23 @@
 var express = require('express');
+
 var multer = require('multer');
 var router = express.Router();
 //var _ = require("underscore");
 var fs = require('fs');
-
 var User = require("../../../database/collections/user");
 var Inmuebles = require("../../../database/collections/inmuebles");
 var Prueba = require("../../../database/collections/prueba");
 <<<<<<< HEAD
+<<<<<<< HEAD
 var Img = require("../../../database/collections/img");
+=======
+var Img = require("../../../database/collections/img");
+var Mapa = require("../../../database/collections/mapa");
+
+//Prueba
+
+
+>>>>>>> b9614c55957c4140519dfde72a3dc9db0d9c5cb0
 
 //var jwt = require("jsonwebtoken");
 
@@ -26,6 +35,7 @@ var upload = multer({storage : storage}).single('img');
 //Prueba*/
 
 /*router.post("/prueba", (req, res) => {
+<<<<<<< HEAD
 =======
 var Mapa = require("../../../database/collections/mapa");
 
@@ -33,6 +43,9 @@ var Mapa = require("../../../database/collections/mapa");
 
 router.post("/prueba", (req, res) => {
 >>>>>>> 3213fc8086a4c832fb31a8c9e18e779913a0bb18
+=======
+>>>>>>> aa6ddf82e2b4b9b510e9667a0f8ef3cf3533c008
+>>>>>>> b9614c55957c4140519dfde72a3dc9db0d9c5cb0
 
   var prueba = {
     Title : req.body.Title,
@@ -50,10 +63,14 @@ router.post("/prueba", (req, res) => {
   });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 });*/
 =======
 });
 >>>>>>> 3213fc8086a4c832fb31a8c9e18e779913a0bb18
+=======
+});
+>>>>>>> b9614c55957c4140519dfde72a3dc9db0d9c5cb0
 
 //ruta para listar los libros mas la informacion completaa del autor
 router.get("/prueba", (req, res, next) => {
@@ -92,20 +109,36 @@ router.get("/prueba", (req, res, next) => {
 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 //mostrar usuarios
 
 =======
 /*
 >>>>>>> 3213fc8086a4c832fb31a8c9e18e779913a0bb18
+=======
+
+/*
+=======
+//mostrar usuarios
+
+
+>>>>>>> 4872d41fca11dbed117e45ee5a8bb1ac2eb25f1e
+>>>>>>> b9614c55957c4140519dfde72a3dc9db0d9c5cb0
 router.get("/prueba", (req, res, next) =>{
   Prueba.find({}).exec( (error, docs) => {
       res.status(200).json(docs);
   })
 <<<<<<< HEAD
+<<<<<<< HEAD
 });
 =======
 });*/
 >>>>>>> 3213fc8086a4c832fb31a8c9e18e779913a0bb18
+=======
+});*/
+
+
+>>>>>>> b9614c55957c4140519dfde72a3dc9db0d9c5cb0
 
 
 
@@ -124,10 +157,16 @@ router.param(function(param,validator){
 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 //router.param('id',/^[a-z0-9]{24}$/);
 =======
 router.param('id',/^[a-z0-9]{24}$/);
 >>>>>>> 3213fc8086a4c832fb31a8c9e18e779913a0bb18
+=======
+
+//router.param('id',/^[a-z0-9]{24}$/);
+
+>>>>>>> b9614c55957c4140519dfde72a3dc9db0d9c5cb0
 
 //añadiendo a usario
 
@@ -142,14 +181,28 @@ router.post("/user", (req, res) => {
     direccionActual : req.body.direccionActual,
     password : req.body.password
   };
-  var userData = new User(user);
-
-  userData.save().then( () => {
-      res.status(200).json({
-        "msn" : "Registrado con exito"
-      });
-  });
-
+ User.findOne({email : req.body.email}).exec( (error, docs) => {
+   if(docs != null){
+     res.status(200).json({
+       "msn" : "el email ya esta en uso"
+     });
+   }
+   else{
+     if(error){
+       res.status(401).json({
+         "msn" : "servicio a fallado"
+       });
+     }
+     else{
+       var userData = new User(user);
+       userData.save().then( () => {
+           res.status(200).json({
+             "msn" : "Registrado con exito"
+           });
+       });
+     }
+   }
+ });
 });
 
 //mostrar usuarios
@@ -252,8 +305,8 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
 
 //añadiendo inmuebles
 
-router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
-
+router.post("/inmuebles", (req, res) => {
+//router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
   var inmuebles = {
 
     tipo : req.body.tipo,
@@ -261,17 +314,17 @@ router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
     precio : req.body.precio,
     ciudad : req.body.ciudad,
     region : req.body.region,
-    ubicacion : req.body.tiubicacionpo,
-    direccion : req.body.direccion,
+    //ubicacion : "",
+    //direccion : req.body.direccion,
     descripcion : req.body.descripcion,
     cantidadCuartos : req.body.cantidadCuartos,
     cantidadBaños : req.body.cantidadBaños,
     garage : req.body.garage,
     superficie : req.body.superficie,
-<<<<<<< HEAD
+    lat : req.body.lat,
+    lon : req.body.lon,
     gallery: "",
-=======
->>>>>>> 3213fc8086a4c832fb31a8c9e18e779913a0bb18
+    imagen : "",
     correo : req.body.correo
   };
   User.findOne({email : req.body.correo}).exec((error, docs) => {
@@ -307,53 +360,16 @@ router.post(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
 
 
 //mostrar inmuebles+-
-<<<<<<< HEAD
+
+
 //tipo , precio , ciudad ,descripcion
 router.get("/inmuebles_ecp", (req, res, next) =>{
-=======
-
-/*router.get("/inmuebles", (req, res, next) =>{
->>>>>>> 3213fc8086a4c832fb31a8c9e18e779913a0bb18
+>>>>>>> b9614c55957c4140519dfde72a3dc9db0d9c5cb0
   Inmuebles.find({}).exec( (error, docs) => {
       res.status(200).json({docs});
     })
   });
 
-//ruta para listar los libros mas la informacion completaa del autor
-router.get("/inmuebles", (req, res, next) => {
-  //aqui utilizamos populate() para poblar el parametro "autor" con toda la info acerca del mismo
-  Inmuebles.find({}).populate("user").exec( (error, docs) => {
-    //checkeamos hay error de algun tipo
-    if (error) {
-      //devolvemos el error;
-      res.status(400).json({error : error});return;
-    }else{
-      res.status(200).json({
-
-          //Podriamos devolver los documentos tal cual los recibimos;
-          //pero tb podemos remapearlos (si vale el termino) segun nuestros requerimientos
-          //Por ej. : usamos la funcion map() de javascript ;
-
-        Inmuebles : docs.map(doc => {
-          return {
-            //aqui reesctructuramos cada documento
-            detalleInmueble : {
-
-              tipo : doc.tipo,
-              estado : doc.estado,
-              precio : doc.precio,
-
-              superficie : doc.superficie
-            },
-            detalleUser : doc.user,
-            //Aqui tambien podemos devolver algun tipo de mensaje u otro que veamos conveniente
-            status : 'OK'
-          }
-        })
-      });
-    }
-  })
-});*/
 
 //ruta para listar los libros mas la informacion completaa del autor
 router.get("/inmuebles", (req, res, next) => {
@@ -403,28 +419,16 @@ router.delete(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
 });
 
 
-<<<<<<< HEAD
 // eliminar inmuebles
 
-router.delete(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
- var url = req.url;
- var id = url.split("/")[2];
- Inmuebles.find({_id : id}).remove().exec( (err, docs) => {
-     res.status(200).json(docs);
- });
-});
-
-
-=======
->>>>>>> 3213fc8086a4c832fb31a8c9e18e779913a0bb18
 router.get("/id_inm", (req, res, next) =>{
-  Inmuebles.find({},"id_user").exec( (error, docs) => {
+  Inmuebles.find({precio: "10000"}).exec( (error, docs) => {
       res.status(200).json(docs);
   })
 });
 
 router.get("/id_user", (req, res, next) =>{
-  User.find({},"_id").exec( (error, docs) => {
+  User.find({},"email").exec( (error, docs) => {
       res.status(200).json(docs);
   })
 });
@@ -451,7 +455,82 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
       return;
   });
 });
-<<<<<<< HEAD
+
+//mapas
+router.post(/mapa\/[a-z0-9]{1,}$/, (req, res) => {
+  var url= req.url;
+  var id = url.split("/")[2];
+  //Ejemplo de validacion
+  if (req.body.name == "" && req.body.email == "") {
+    res.status(400).json({
+      "msn" : "formato incorrecto"
+    });
+    return;
+  }
+  var mapa = {
+    calle : req.body.street,
+    descripcion : req.body.descripcion,
+    lat : req.body.lat,
+    lon : req.body.lon,
+    vecinos : req.body.neighborhood,
+    ciudad : req.body.city,
+    contact: req.body.contact
+  };
+  var mapaData = new Mapa(mapa);
+
+  mapaData.save().then( (rr) => {
+
+    var mp = {
+      ubicacion: new Array()
+    }
+    Inmuebles.findOne({_id:id}).exec( (error, docs) => {
+      var dt = docs.ubicacion;
+      var aux = new Array();
+      if (dt.length == 1 && dt[0] == ""){
+        mp.ubicacion.push("/api/v1.0/mapa/")
+      }
+      else {
+        aux.push("/api/v1.0/mapa/");
+        dt = dt.concat(aux);
+        mp.ubicacion = dt;
+      }
+      Inmuebles.findOneAndUpdate({_id : id}, mp, (err, params) => {
+          if(err){
+            res.status(500).json({
+              "msn" : "error"
+            });
+            return;
+          }
+          res.status(200).json(req.file);
+          return;
+      });
+    });
+    //content-type
+    res.status(200).json({
+      "id" : rr._id,
+      "msn" : "mapa Registrado con exito "
+    });
+  });
+});
+
+//recuperar el array de la mapa
+router.get(/mapa\/[a-z0-9]{1,}$/, (req, res) => {
+  var url = req.url;
+  var id = url.split("/")[2];
+  console.log(id)
+  Mapa.findOne({_id: id}).exec((err, docs) => {
+    if (err) {
+      res.status(500).json({
+        "msn": "Sucedio algun error en el servicio"
+      });
+      return;
+    }
+    else{
+          res.status(200).json({docs});
+    }
+  });
+});
+
 //para cargar la imagen de los inmuebles
 
 router.post("/userimg", (req, res) => {
@@ -503,25 +582,43 @@ router.post(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
         //content-type
         //Update User IMG
         var home = {
-          gallery: new Array()
+          gallery: new Array(),
+          imagen : new Array()
         }
+
+        var picture = "http://localhost:7777" + ruta;
+
+        console.log("ruta de la img"+" " +picture +" "+ "imagen llll ruta");
+
         Inmuebles.findOne({_id:id}).exec( (err, docs) =>{
-          console.log(docs);
+          //console.log(docs);
+
           var data = docs.gallery;
+          var ph = docs.imagen;
           var aux = new  Array();
+          var phaux = new Array();
           if (data.length == 1 && data[0] == "") {
             //aqui se pone la ip de la maquina donde esta corriendo , es decir nuestra ip
-            home.gallery.push("http://192.168.43.185:7777/api/v1.0/homeimg/" + infoimg._id)
-          } else {
-            // aqui tambien nuestra ip 
-            aux.push("http://192.168.43.185:7777/api/v1.0/homeimg/" + infoimg._id);
+            home.gallery.push("/api/v1.0/homeimg/" + infoimg._id);
+            home.imagen.push("http://localhost:7777" + ruta );
+            //photo.imagen.push(picture);
+
+          }
+
+          else {
+            // aqui tambien nuestra ip
+            aux.push("/api/v1.0/homeimg/" + infoimg._id);
+            phaux.push("http://localhost:7777" + ruta);
+            //phaux.push(picture);
             data = data.concat(aux);
+            ph = ph.concat(phaux);
             home.gallery = data;
+            home.imagen = ph;
           }
           Inmuebles.findOneAndUpdate({_id : id}, home, (err, params) => {
               if (err) {
                 res.status(500).json({
-                  "msn" : "error en la actualizacion del usuario"
+                  "msn" : "error en la actualizacion de la imagen"
                 });
                 return;
               }
@@ -530,6 +627,7 @@ router.post(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
               );
               return;
           });
+
         });
       });
     }
@@ -548,16 +646,97 @@ router.get(/homeimg\/[a-z0-9]{1,}$/, (req, res) => {
       });
       return;
     }
-    //regresamos la imagen deseada
-    var img = fs.readFileSync("./" + docs.physicalpath);
-    //var img = fs.readFileSync("./public/avatars/img.jpg");
-    res.contentType('image/jpeg');
-    res.status(200).send(img);
+    else{
+      if(docs){
+        //regresamos la imagen deseada
+        var img = fs.readFileSync("./" + docs.physicalpath);
+        //var img = fs.readFileSync("./public/avatars/img.jpg");
+        res.contentType('image/jpeg');
+        res.status(200).send(img);
+        //regresamos la imagen deseada
+      }
+      else{
+        res.status(424).json({
+          "msn": "La solicitud falló, ,la imagen fue eliminada"
+        });
+        return;
+      }
+    }
+
   });
 });
 
+router.delete(/img\/[a-z0-9]{1,}$/, (req, res) => {
+ var url = req.url;
+ var id = url.split("/")[2];
+Img.find({_id : id}).remove().exec( (err, docs) => {
+     res.status(200).json(docs);
+ });
+});
 
-=======
+//FIltrado
+router.get("/inmuebles_f ", (req, res, next) => {
+  var params = req.query;
+  console.log(params);
+  var precio = params.precio;
+  var over = params.over;
+
+  if(precio == undefined && over == undefined){
+    Inmuebles.find({lat: {$ne: null}, lon: {$ne: null}}).exec( (error, docs) => {
+      res.status(200).json({
+        info: docs
+      });
+    })
+    return;
+  }
+ if(over == "equals"){
+   console.log("---------->")
+   Inmuebles.find({precio : precio, lat: {$ne: null}, lon: {$ne: null}}).exec( (error, docs) => {
+     res.status(200).json({
+       info: docs
+     });
+   })
+   return;
+ }
+ else if (over == "true"){
+   Inmuebles.find({precio: {$gt:precio}, lat: {$ne: null}, lon: {$ne: null}}).exec( (error, docs) => {
+     res.status(200).json({
+       info: docs
+     });
+   })
+ }
+});
+
+//filtro simplificado
+router.get('/filtro', function(req, res){
+  var params = req.query;
+  var precio;
+  var tipo ;
+
+  Inmuebles.find({precio: params.precio }).exec( ( error, docs) => {
+
+    if(error){
+      res.status(400).json({
+        "msn":"error de informacion"
+      });
+      return;
+    }
+    else
+    {
+      if(docs){
+        res.status(200).json({info : docs});
+      }
+      else{
+        res.status(424).json({
+          "msn": "La solicitud falló"
+        });
+        return;
+      }
+    }
+  })
+
+});
+
 
 //mapas
 router.post("/mapa", (req, res) => {
@@ -589,6 +768,4 @@ router.post("/mapa", (req, res) => {
     });
   });
 });
-
->>>>>>> 3213fc8086a4c832fb31a8c9e18e779913a0bb18
 module.exports = router;
