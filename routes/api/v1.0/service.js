@@ -17,7 +17,7 @@ var Mapa = require("../../../database/collections/mapa");
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb){
-    cb(null ,'./public/avatars')
+    cb(null ,'./public/avatars')//aqui se define el lugar donde se almacena la imagen
   },
   filename: function (req, file, cb) {
     console.log("-------------------------");
@@ -25,7 +25,7 @@ var storage = multer.diskStorage({
     cb(null, file.originalname + "-" +  Date.now() + ".jpg");
   }
 });
-var upload = multer({storage : storage}).single('img');
+var upload = multer({storage : storage}).single('img');//este es el key con la cual se ingresara la imagen
 //Prueba*/
 
 /*router.post("/prueba", (req, res) => {
@@ -460,7 +460,7 @@ router.delete(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
 // eliminar inmuebles
 
 router.get("/id_inm", (req, res, next) =>{
-  Inmuebles.find({precio: "10000"}).exec( (error, docs) => {
+  Inmuebles.find({}).exec( (error, docs) => {
       res.status(200).json(docs);
   })
 });
@@ -469,6 +469,25 @@ router.get("/id_user", (req, res, next) =>{
   User.find({},"email").exec( (error, docs) => {
       res.status(200).json(docs);
   })
+});
+
+router.get(/homeid\/[a-z0-9]{1,}$/, (req, res) =>{
+  var url = req.url;
+  var id = url.split("/")[2];
+  console.log(id+"<---");
+  Inmuebles.find({user : id}).exec( (err, homes) => {
+    if(err){
+      res.status(500).json({
+        "msn": "No se encuentra el usuario"
+      });
+      return;
+    }
+    else{
+      res.status(200).json({homes});
+      return;
+    }
+  })
+
 });
 
 
