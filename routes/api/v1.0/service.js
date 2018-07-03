@@ -828,12 +828,44 @@ router.get('/filtro_precio', (req, res, next) =>{
   })
 });
 
-router.get('/filtro_tipo', (req res,next) =>{
+router.get('/filtro_tipo', (req ,res,next) =>{
   var params = req.query;
   var tipo = params.tipo;
+  var estado = params.estado;
+  console.log("tipo"+tipo);
 
+  Inmuebles.find( {$and: [ {tipo : tipo},{estado : estado} ] } ).exec((err, docs) => {
+    if(docs){
+          res.status(200).json({
+            info: docs
+          });
+    }
+    else{
+      res.status(201).json({
+        "msn" : "no existe inmuebles con ese precio "
+      })
+    }
+  })
 });
 
+router.get('/filtro_cant', (req, res, next) => {
+  var params = req.query;
+  var wuc = params.wuc;
+  var cuarto = params.cuarto;
+  console.log("-->"+wuc);
+  Inmuebles.find( {$and : [ {cantidadCuartos: cuarto }, {cantidadBaños : wuc }] }).exec((err, docs) =>{
+    if(docs){
+          res.status(200).json({
+            info: docs
+          });
+    }
+    else{
+      res.status(201).json({
+        "msn" : "no existe inmuebles con ese precio "
+      })
+    }
+  })
+});
 
 
 
