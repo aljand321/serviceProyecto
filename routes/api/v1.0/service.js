@@ -786,7 +786,7 @@ router.get("/inmuebles_f", (req, res, next) => {
    console.log("---------->")
    Inmuebles.find({precio : precio, lat: {$ne: null}, lon: {$ne: null}}).exec( (error, docs) => {
      res.status(200).json({
-        docs
+      info:  docs
      });
    })
    return;
@@ -802,18 +802,39 @@ router.get("/inmuebles_f", (req, res, next) => {
 });
 
 //filtro simplificado
-router.get('/filtro', (req, res, next) =>{
-  var params = req.query.precio;
-  var precio;
-  var tipo ;
-  console.log("msn"+params);
-  if(params == "Casa"){
-  Inmuebles.find( { precio : params} ).exec((err, docs) => {
-    res.status(200).json({dosc});
-    return;
+router.get('/filtro_precio', (req, res, next) =>{
+  var params = req.query;
+  var max = params.max;
+  var min = params.min ;
+  console.log("msn"+max);
+  console.log("msnmin"+min);
+
+//db.inventario.find( {$and: [  {qty :{  $gt :  25  }} , {qty : { $lt : 85 }} ] } )
+//db.inventario.find( {qty : {$gt: 25, $lt: 85} } )
+  Inmuebles.find( {$and: [ {precio : {$lt : max}} , {precio : {$gt : min}} ] }  ).exec((err, docs) => {
+    if(docs){
+          res.status(200).json({
+            info: docs
+          });
+    }
+    else{
+      res.status(201).json({
+        "msn" : "no existe inmuebles con ese precio "
+      })
+    }
+    /*res.status(200).json({
+      info: docs
+    });*/
   })
-  }
 });
+
+router.get('/filtro_tipo', (req res,next) =>{
+  var params = req.query;
+  var tipo = params.tipo;
+
+});
+
+
 
 
 //mapas
