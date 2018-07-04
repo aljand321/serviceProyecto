@@ -17,7 +17,7 @@ var Mapa = require("../../../database/collections/mapa");
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb){
-    cb(null ,'./public/avatars')
+    cb(null ,'./public/avatars')//aqui se define el lugar donde se almacena la imagen
   },
   filename: function (req, file, cb) {
     console.log("-------------------------");
@@ -25,7 +25,7 @@ var storage = multer.diskStorage({
     cb(null, file.originalname + "-" +  Date.now() + ".jpg");
   }
 });
-var upload = multer({storage : storage}).single('img');
+var upload = multer({storage : storage}).single('img');//este es el key con la cual se ingresara la imagen
 //Prueba*/
 
 /*router.post("/prueba", (req, res) => {
@@ -504,7 +504,7 @@ router.delete(/inmuebles\/[a-z0-9]{1,}$/, (req, res) => {
 // eliminar inmuebles
 
 router.get("/id_inm", (req, res, next) =>{
-  Inmuebles.find({precio: "10000"}).exec( (error, docs) => {
+  Inmuebles.find({}).exec( (error, docs) => {
       res.status(200).json(docs);
   })
 });
@@ -513,6 +513,25 @@ router.get("/id_user", (req, res, next) =>{
   User.find({},"email").exec( (error, docs) => {
       res.status(200).json(docs);
   })
+});
+
+router.get(/homeid\/[a-z0-9]{1,}$/, (req, res) =>{
+  var url = req.url;
+  var id = url.split("/")[2];
+  console.log(id+"<---");
+  Inmuebles.find({user : id}).exec( (err, homes) => {
+    if(err){
+      res.status(500).json({
+        "msn": "No se encuentra el usuario"
+      });
+      return;
+    }
+    else{
+      res.status(200).json({homes});
+      return;
+    }
+  })
+
 });
 
 
@@ -837,7 +856,7 @@ router.get("/inmuebles_f", (req, res, next) => {
    console.log("---------->")
    Inmuebles.find({precio : precio, lat: {$ne: null}, lon: {$ne: null}}).exec( (error, docs) => {
      res.status(200).json({
-        docs
+      info:  docs
      });
    })
    return;
@@ -853,18 +872,71 @@ router.get("/inmuebles_f", (req, res, next) => {
 });
 
 //filtro simplificado
-router.get('/filtro', (req, res, next) =>{
-  var params = req.query.precio;
-  var precio;
-  var tipo ;
-  console.log("msn"+params);
-  if(params == "Casa"){
-  Inmuebles.find( { precio : params} ).exec((err, docs) => {
-    res.status(200).json({dosc});
-    return;
+router.get('/filtro_precio', (req, res, next) =>{
+  var params = req.query;
+  var max = params.max;
+  var min = params.min ;
+  console.log("msn"+max);
+  console.log("msnmin"+min);
+
+//db.inventario.find( {$and: [  {qty :{  $gt :  25  }} , {qty : { $lt : 85 }} ] } )
+//db.inventario.find( {qty : {$gt: 25, $lt: 85} } )
+  Inmuebles.find( {$and: [ {precio : {$lt : max}} , {precio : {$gt : min}} ] }  ).exec((err, docs) => {
+    if(docs){
+          res.status(200).json({
+            info: docs
+          });
+    }
+    else{
+      res.status(201).json({
+        "msn" : "no existe inmuebles con ese precio "
+      })
+    }
+    /*res.status(200).json({
+      info: docs
+    });*/
   })
-  }
 });
+
+router.get('/filtro_tipo', (req ,res,next) =>{
+  var params = req.query;
+  var tipo = params.tipo;
+  var estado = params.estado;
+  console.log("tipo"+tipo);
+
+  Inmuebles.find( {$and: [ {tipo : tipo},{estado : estado} ] } ).exec((err, docs) => {
+    if(docs){
+          res.status(200).json({
+            info: docs
+          });
+    }
+    else{
+      res.status(201).json({
+        "msn" : "no existe inmuebles con ese precio "
+      })
+    }
+  })
+});
+
+router.get('/filtro_cant', (req, res, next) => {
+  var params = req.query;
+  var wuc = params.wuc;
+  var cuarto = params.cuarto;
+  console.log("-->"+wuc);
+  Inmuebles.find( {$and : [ {cantidadCuartos: cuarto }, {cantidadBaños : wuc }] }).exec((err, docs) =>{
+    if(docs){
+          res.status(200).json({
+            info: docs
+          });
+    }
+    else{
+      res.status(201).json({
+        "msn" : "no existe inmuebles con ese precio "
+      })
+    }
+  })
+});
+
 
 
 //mapas
