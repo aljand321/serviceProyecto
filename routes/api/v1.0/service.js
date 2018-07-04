@@ -63,7 +63,6 @@ router.post("/prueba", (req, res) => {
 <<<<<<< HEAD
 });*/
 
->>>>>>> 0aaa1f96b3c43edf3740bac334af927313b2240a
 
 //ruta para listar los libros mas la informacion completaa del autor
 router.get("/prueba", (req, res, next) => {
@@ -223,7 +222,6 @@ router.get(/user\/[a-z0-9]{1,}$/, (req, res) => {
           res.status(200).json(docs);
           return;
       }
-
       res.status(200).json({
         "msn" : "No existe el usario "
       });
@@ -362,20 +360,11 @@ router.post("/inmuebles", (req, res) => {
 
       //console.log(inmuebles);
       var casaData = new Inmuebles(inmuebles);
-<<<<<<< HEAD
       var id_inm = casaData._id;
       casaData.save().then( (doc) => {
           res.status(200).json({
             "msn" : "Registrado con exito",
             "id" : id_inm
-=======
-      var id_in = casaData._id;
-      casaData.save().then( () => {
-          res.status(200).json({
-            "msn" : "Registrado con exito",
-            "imn" : id_in
-
->>>>>>> 0aaa1f96b3c43edf3740bac334af927313b2240a
           })
 
       }).catch((err) => {
@@ -549,7 +538,7 @@ router.patch(/user\/[a-z0-9]{1,}$/, (req, res) => {
   });
 });
 
-<<<<<<< HEAD
+
 
 //para actualizar uno por uno
 router.patch(/lat_Long\/[a-z0-9]{1,}$/, (req, res) => {
@@ -575,9 +564,6 @@ router.patch(/lat_Long\/[a-z0-9]{1,}$/, (req, res) => {
 //<<<<<>>>>>>>>>>>>>>>>>
 
 
-
-=======
->>>>>>> 0aaa1f96b3c43edf3740bac334af927313b2240a
 //mapas
 router.post(/mapa\/[a-z0-9]{1,}$/, (req, res) => {
   var url= req.url;
