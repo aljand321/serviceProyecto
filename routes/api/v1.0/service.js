@@ -466,8 +466,9 @@ router.get("/id_inm", (req, res, next) =>{
 });
 
 router.get("/id_user", (req, res, next) =>{
-  User.find({},"email").exec( (error, docs) => {
-      res.status(200).json(docs);
+  User.find({}).exec( (error, docs) => {
+      res.status(200).json({docs });
+      return;
   })
 });
 
@@ -849,6 +850,7 @@ router.get('/filtro_tipo', (req ,res,next) =>{
 });
 
 router.get('/filtro_cant', (req, res, next) => {
+  //?wuc=2&curto=6
   var params = req.query;
   var wuc = params.wuc;
   var cuarto = params.cuarto;
@@ -862,9 +864,34 @@ router.get('/filtro_cant', (req, res, next) => {
     else{
       res.status(201).json({
         "msn" : "no existe inmuebles con ese precio "
-      })
+      });
     }
   })
+});
+//filtro.todo en uno con nulls
+
+router.get('filtro_all',(req, res, next) =>{
+  var params= req.query;
+  var tipo = params.tipo;
+  //var estado = params.estado;
+  //var max = params.max;
+  //var min = params.min ;
+  var wuc = params.wuc;
+  var cuarto = params.cuarto;
+  console.log("tipo"+tipo);
+  Inmuebles.find( {$or :[ {tipo: tipo}, {$and: [ {cantidadCuartos: cuarto},{cantidadBaños : wuc } ] } ] } ).exec((err, docs) =>{
+    if(docs){
+      res.status(200).json({
+        info: docs
+      });
+    }
+    else{
+      res.status(201).json({
+        "msn" : "no existe inmuebles con ese precio "
+      });
+    }
+  })
+
 });
 
 
@@ -900,6 +927,26 @@ router.post("/mapa", (req, res) => {
   });
 });
 
+//db.inventario.find({},{"item":1, "_id":0,"estado":1})
+//muestra la longitud y latitud de todos los inmuebles
+router.get("/ubicacion",(req, res) => {
+  Inmuebles.find({},{"lon":1,"lat":1}).exec((err, docs)=>{
+
+      res.status(200).json(docs);
+  })
+});
+//muestra la longitud y la latitud de un determinado inmueble
+router.get(/direccion\/[a-z0-9]{1,}$/,(req, res)=>{
+  var url = req.url;
+  var id = url.split("/")[2];
+  Inmuebles.find({$and :[ {"_id" : id},{"lon":1}]}).exec((err, docs)=>{
+    res.status(200).json({
+      docs
+   });
+   return;
+   console.log(Inmuebles.lat);
+ });
+});
 
 //FIltrado
 //mostrar inmuebles por usuario
