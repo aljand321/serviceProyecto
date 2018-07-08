@@ -821,7 +821,7 @@ router.get('/filtro_precio', (req, res, next) =>{
     else{
       res.status(201).json({
         "msn" : "no existe inmuebles con ese precio "
-      })
+      });
     }
     /*res.status(200).json({
       info: docs
@@ -835,7 +835,7 @@ router.get('/filtro_tipo', (req ,res,next) =>{
   var estado = params.estado;
   console.log("tipo"+tipo);
 
-  Inmuebles.find( {$and: [ {tipo : tipo},{estado : estado} ] } ).exec((err, docs) => {
+  Inmuebles.find( {$or: [ {tipo : tipo},{estado : estado} ] } ).exec((err, docs) => {
     if(docs){
           res.status(200).json({
             info: docs
@@ -844,7 +844,7 @@ router.get('/filtro_tipo', (req ,res,next) =>{
     else{
       res.status(201).json({
         "msn" : "no existe inmuebles con ese precio "
-      })
+      });
     }
   })
 });
@@ -855,7 +855,7 @@ router.get('/filtro_cant', (req, res, next) => {
   var wuc = params.wuc;
   var cuarto = params.cuarto;
   console.log("-->"+wuc);
-  Inmuebles.find( {$and : [ {cantidadCuartos: cuarto }, {cantidadBaños : wuc }] }).exec((err, docs) =>{
+  Inmuebles.find( {$or : [ {cantidadCuartos: cuarto }, {cantidadBaños : wuc }] }).exec((err, docs) =>{
     if(docs){
           res.status(200).json({
             info: docs
@@ -870,20 +870,36 @@ router.get('/filtro_cant', (req, res, next) => {
 });
 //filtro.todo en uno con nulls
 
-router.get('filtro_all',(req, res, next) =>{
+router.get('/filtro_all',(req, res, next) =>{
   var params= req.query;
-  var tipo = params.tipo;
+  //  var tipo = params.tipo;
   //var estado = params.estado;
-  //var max = params.max;
-  //var min = params.min ;
+  var max = params.max;
+  var min = params.min;
   var wuc = params.wuc;
   var cuarto = params.cuarto;
-  console.log("tipo"+tipo);
-  Inmuebles.find( {$or :[ {tipo: tipo}, {$and: [ {cantidadCuartos: cuarto},{cantidadBaños : wuc } ] } ] } ).exec((err, docs) =>{
+  //console.log("tipo"+tipo);
+  //db.inmuebles.find({$and :[{$or :[{precio :12000}, {precio:14000}]},{$or :[{cantidadBaños:4},{cantidadCuartos: 12}]}]});
+
+  Inmuebles.find( { $and: [ {precio : {$lt : max}} , {precio : {$gt : min}} ]} ).exec( (err, docs) =>{
     if(docs){
       res.status(200).json({
         info: docs
       });
+
+    }
+    else{
+      res.status(201).json({
+        "msn" : "no existe inmuebles con ese precio "
+      });
+
+    }
+  })
+  Inmuebles.find( {$and : [ {cantidadCuartos: cuarto }, {cantidadBaños : wuc }] }).exec((err, docs) =>{
+    if(docs){
+          res.status(200).json({
+            info: docs
+          });
     }
     else{
       res.status(201).json({
@@ -939,7 +955,7 @@ router.get("/ubicacion",(req, res) => {
 router.get(/direccion\/[a-z0-9]{1,}$/,(req, res)=>{
   var url = req.url;
   var id = url.split("/")[2];
-  Inmuebles.find({$and :[ {"_id" : id},{"lon":1}]}).exec((err, docs)=>{
+  Inmuebles.find({$and :[ {"_id" : id},{"lon":$}]}).exec((err, docs)=>{
     res.status(200).json({
       docs
    });
@@ -950,5 +966,30 @@ router.get(/direccion\/[a-z0-9]{1,}$/,(req, res)=>{
 
 //FIltrado
 //mostrar inmuebles por usuario
+
+router.get(/usergmail\/[a-z0-9-@]{1,}$/, (req, res) => {
+  var url = req.url;
+  var mail = url.split("/")[2];
+  console.log(mail);
+  User.findOne({email: mail}).exec((er, user) =>{
+    if(er){
+      res.status(500).json({
+        "msn": "Sucedio algun error en el servicio"
+      });
+      return;
+    }
+    else{
+      if(user == null){
+        res.status(424).json({
+          "msn": "el usuaio no existe"
+        });
+        return;
+      }
+      else{
+        res.status(200).json({user});
+      }
+    }
+  })
+});
 //poligonos para los remapearlos
 module.exports = router;
