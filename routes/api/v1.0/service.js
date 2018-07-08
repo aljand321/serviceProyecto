@@ -318,6 +318,27 @@ router.patch(/inmueble_patch\/[a-z0-9]{1,}$/, (req, res) => {
   });
 });
 
+router.patch(/user_patch\/[a-z0-9]{1,}$/, (req, res) => {
+  var url = req.url;
+  var id = url.split("/")[2];
+  var keys = Object.keys(req.body);
+  var user = {};
+  for (var i = 0; i < keys.length; i++) {
+    user[keys[i]] = req.body[keys[i]];
+  }
+  console.log(user);
+  User.findOneAndUpdate({_id: id}, user, (err, params) => {
+      if(err) {
+        res.status(500).json({
+          "msn": "Error no se pudo actualizar los datos"
+        });
+        return;
+      }
+      res.status(200).json(params);
+      return;
+  });
+});
+
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //para el servicio de las casas
@@ -904,7 +925,7 @@ router.get('/filtro_tipo', (req ,res,next) =>{
   var estado = params.estado;
   console.log("tipo"+tipo);
 
-  Inmuebles.find( {$and: [ {tipo : tipo},{estado : estado} ] } ).exec((err, docs) => {
+  Inmuebles.find( {$or: [ {tipo : tipo},{estado : estado} ] } ).exec((err, docs) => {
     if(docs){
           res.status(200).json({
             info: docs
