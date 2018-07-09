@@ -966,27 +966,26 @@ router.get(/direccion\/[a-z0-9]{1,}$/,(req, res)=>{
 
 //FIltrado
 //mostrar inmuebles por usuario
-
-router.get(/usergmail\/[a-z0-9-@]{1,}$/, (req, res) => {
-  var url = req.url;
-  var mail = url.split("/")[2];
+// \{4,4}
+router.get('/usergmail', (req, res) => {
+  var url = req.query;
+  var mail = url.email;
   console.log(mail);
-  User.findOne({email: mail}).exec((er, user) =>{
+
+  User.find({email: mail}).exec((er, user) =>{
     if(er){
       res.status(500).json({
         "msn": "Sucedio algun error en el servicio"
       });
-      return;
     }
     else{
       if(user == null){
         res.status(424).json({
           "msn": "el usuaio no existe"
         });
-        return;
       }
       else{
-        res.status(200).json({user});
+        res.status(200).json({info : user});
       }
     }
   })
